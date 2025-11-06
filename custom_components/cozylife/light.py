@@ -28,9 +28,6 @@ from homeassistant.components.light import (
     COLOR_MODE_UNKNOWN,
     FLASH_LONG,
     FLASH_SHORT,
-    SUPPORT_EFFECT,
-    SUPPORT_FLASH,
-    SUPPORT_TRANSITION,
     LightEntity,
 )
 from homeassistant.const import CONF_EFFECT
@@ -298,7 +295,6 @@ class CozyLifeLight(CozyLifeSwitchAsLight,RestoreEntity):
 
 
         self._refresh_state()
-        self.SUPPORT_COZYLIGHT = self.get_supported_features()
 
     async def async_set_effect(self, effect: str):
         """Set the effect regardless it is On or Off."""
@@ -609,21 +605,6 @@ class CozyLifeLight(CozyLifeSwitchAsLight,RestoreEntity):
     @property
     def supported_features(self) -> int:
         """Flag supported features."""
-        return self.SUPPORT_COZYLIGHT
-
-    def get_supported_features(self) -> int:
-        """Flag supported features."""
-        features = 0
-        features = features | SUPPORT_EFFECT | SUPPORT_TRANSITION
-        try:
-            # Map features for better reading
-            if COLOR_MODE_BRIGHTNESS in self._attr_supported_color_modes:
-                features = features | SUPPORT_BRIGHTNESS
-            if COLOR_MODE_HS in self._attr_supported_color_modes:
-                features = features | SUPPORT_COLOR
-            if COLOR_MODE_COLOR_TEMP in self._attr_supported_color_modes:
-                features = features | SUPPORT_COLOR_TEMP
-        except:
-            pass
-        # fallback
-        return features
+        # In modern Home Assistant, features are determined by supported_color_modes
+        # Return 0 as feature flags are deprecated
+        return 0
